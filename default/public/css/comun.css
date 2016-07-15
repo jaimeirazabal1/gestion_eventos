@@ -1,0 +1,15 @@
+	@import url(http://fonts.googleapis.com/css?family=Roboto);
+	body{
+		background: grey;
+	}
+	.container{
+		background: #f7f7f7;
+		padding: 30px;
+	    left: 50%;
+	    top: 50%;
+	    position: absolute;
+
+	    -webkit-transform: translate3d(-50%, -50%, 0);
+	    -moz-transform: translate3d(-50%, -50%, 0);
+	    transform: translate3d(-50%, -50%, 0);
+	}

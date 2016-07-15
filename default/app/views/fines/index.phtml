@@ -1,0 +1,213 @@
+<?php echo Tag::css('comun') ?>
+<div class="container">
+<?php if (isset($usuarios)): ?>
+	<div class="text-center">
+		<h2>Fines de Semana</h2>
+	</div>
+	<?php View::content() ?>
+	<p>Seleccione un usuario</p>
+	<ul class="list-group">
+	  <?php foreach ($usuarios as $key => $value): ?>
+	  	<li class="list-group-item"><?php echo Html::link('fines/index/'.$value->id,ucfirst($value->nombre)." ".ucfirst($value->apellido)) ?></li>
+	  <?php endforeach ?>
+	</ul>
+
+<?php else: ?>
+
+	<?php if (!$fines): ?>
+			<?php echo Html::link("fines/","Atras") ?>
+			<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
+			  Agregar Registro
+			</button>
+	<br>	
+	<br>
+		<div class='text-center'>	
+				<h2>Este Usuario no tiene registros</h2>
+		</div>
+	<?php else: ?>	
+
+	<?php echo Tag::js("comun") ?>
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jdataTables.bootstrap.min.css">
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".datatables").DataTable({
+		      language:{
+		          "sProcessing":     "Procesando...",
+		          "sLengthMenu":     "Mostrar _MENU_ registros",
+		          "sZeroRecords":    "No se encontraron resultados",
+		          "sEmptyTable":     "Ningún dato disponible en esta tabla",
+		          "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+		          "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+		          "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+		          "sInfoPostFix":    "",
+		          "sSearch":         "Buscar:",
+		          "sUrl":            "",
+		          "sInfoThousands":  ",",
+		          "sLoadingRecords": "Cargando...",
+		          "oPaginate": {
+		              "sFirst":    "Primero",
+		              "sLast":     "Último",
+		              "sNext":     "Siguiente",
+		              "sPrevious": "Anterior"
+		          },
+		          "oAria": {
+		              "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		              "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+		          }
+		      }
+		    });
+
+		});
+	</script>
+	<div class="text-center">
+		<h2>Fines de Semana de <?php echo ucfirst($fines[0]->nombre)." ".ucfirst($fines[0]->apellido) ?></h2>
+	</div>
+	<?php View::content() ?>
+	<?php echo Html::link("fines/","Atras") ?>
+
+		<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">
+		  Agregar Registro
+		</button>
+	<br>	
+	<br>
+		<table class="table datatables">
+			<thead>
+				<th>Salida</th>
+				<th>Semana</th>
+				<th>Dirección</th>
+				<th></th>
+			</thead>
+			<?php foreach ($fines as $key => $value): ?>
+					<?php 
+						$inicio = explode(' ',$value->fecha_inicio);
+						$fin = explode(' ',$value->fecha_final);
+						if ($value->se_queda) {
+							$string = "No Salió";
+						}else{
+							$string = "Si Salió";
+						}
+					 ?>
+					<tr>
+						<td><?php echo $string ?></td>
+						<td><?php echo "Desde: ".$inicio[0]."<br> hasta: ".$fin[0] ?></td>
+						<td><?php echo ($value->direccion ? $value->direccion : "No Aplica") ?></td>
+						<th>
+							<div class="btn-group btn-group-xs" role="group" aria-label="">
+							  <a href="<?php echo PUBLIC_PATH.'fines/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar el registro?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
+							  
+							  <a href="<?php echo PUBLIC_PATH.'fines/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
+
+							</div>
+						</th>
+					</tr>
+				
+			<?php endforeach ?>
+		</table>
+
+	<?php endif ?>
+
+<?php endif ?>
+</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Agregar Registro de fin de semana</h4>
+		        <div id="mensajes_fines"></div>
+		      </div>
+		      <div class="modal-body">
+		        <?php echo Form::open() ?>
+		        	<?php echo Form::hidden('ge_fines.usuario_id',NULL,$usuario->id) ?>
+		        <div class="check">
+			        <label>
+			          <input type="checkbox" name="fines[se_queda]" id="se_queda" checked> Me quedo esta fin de semana
+			        </label>
+			    </div>
+			   <div class="form-group hide div_direccion">
+		        <label>Dirección</label>
+		        <?php echo Form::hidden("fines.usuario_id",NULL,$usuario->id) ?>
+		        <?php echo Form::textarea("fines.direccion","class='form-control' placeholder='Indique la dirección aqui...'") ?>
+		      </div>
+		        <div class="row">
+		        	<div class="col-md-6">
+		        		<div class="form-group">
+		        			<label>Inicio de Semana (sabado)</label>
+		        			<?php echo Form::text("ge_fines.fecha_inicio","class='datepicker form-control'") ?>
+		        		</div>
+		        	</div>
+		        	<div class="col-md-6">
+		        		<div class="form-group">
+		        			<label>Final de Semana (domingo)</label>
+		        			<?php echo Form::text("ge_fines.fecha_final","class='datepicker form-control'") ?>
+		        		</div>		        		
+		        	</div>
+		        </div>
+		        <?php echo Form::close() ?>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+						        $("body").on("click","#actualizar_direccion,#actualizar_telefono",function(){
+      var accion = $(this).attr("id").split("_")[1];
+      var id = $(this).attr("usuario");
+      $(".cargando").removeClass("hide");
+      $.ajax({
+        url:"editar_valor/"+accion+"/"+id+"/"+$(this).parent().parent().find("input[type='text']").val(),
+        dataType:"json",
+        success:function(r){
+          $(".cargando").addClass("hide");
+
+          $(".mensajes_mis_tados").html("<div class='alert alert-info'>"+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+r.message+"</div>");
+        }
+      })
+    });
+    $("body").on("click","#btn_contrasena",function(){
+      var url = $(this).attr("action");
+      $.ajax({
+        url:"cambiopass",
+        type:"POST",
+        data:$("#cambio_contrasena").serialize(),
+        dataType:"json",
+        success:function(r){
+          $(".mensajes").html("<div class='alert alert-info'>"+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+r.message+"</div>");
+        }
+      })
+      return false;
+    })
+    $("body").on("click","#se_queda",function(){
+      if ($(this).is(":checked") == true) {
+        $(this).parent().parent().parent().find(".div_direccion").addClass("hide")
+      }else{
+        $(this).parent().parent().parent().find(".div_direccion").removeClass("hide")
+
+      }
+    });
+    $("body").on("submit","#form_fines",function(){
+      $.ajax({
+        url:$(this).attr("action"),
+        data:$(this).serialize(),
+        type:"post",
+        dataType:"json",
+        success:function(r){
+          if (r.success ==  true) {
+            $(".tabla_fines").html(r.registros);
+          }
+          $("#mensajes_fines").html("<div class='alert alert-info'>"+r.message+"</div>");
+        }
+      })
+      return false;
+    })
+			})
+		</script>
