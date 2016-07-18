@@ -1,0 +1,71 @@
+<?php echo Tag::css("comun") ?>
+<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.css">
+<div class="container">
+	<div class="text-center"><h2>Nuevo Evento</h2></div>
+	<?php View::content() ?>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<?php echo Form::open("","post","") ?>
+				
+					
+				<?php echo Form::hidden("evento.usuario_id",NULL,Auth::get("id")) ?>
+		
+				<div class="form-group">
+					<label>Detalle</label>
+					<div class="row">
+						<div class="col-md-12">
+							<?php echo Form::textarea("evento.detalle","class='form-control' placeholder='Escribe sobre el evento'") ?>
+						</div>
+					</div>
+					
+				</div>
+				<div class="form-group">
+						<div class="row">
+							<div class="col-md-6">
+					<label>Inicio</label>
+								<?php echo Form::text("evento.fecha_inicio","class='form-control datepicker' ") ?>
+							</div>
+						
+							<div class="col-md-6">
+							<label>Final</label>
+								<?php echo Form::text("evento.fecha_final","class='form-control datepicker' ") ?>
+							</div>
+						</div>
+					</div>
+							
+				<?php echo Form::submit("Registrar","class='btn btn-success'") ?>
+				<?php echo Html::link("evento/","Ver Eventos","class='btn btn-default'") ?>
+				</div>
+			<?php echo Form::close() ?>
+
+
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$.datepicker.regional['es'] = {
+		 closeText: 'Cerrar',
+		 prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+		 };
+ 		$.datepicker.setDefaults($.datepicker.regional['es']);
+		$(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+	});
+</script>

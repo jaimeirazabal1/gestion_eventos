@@ -11,6 +11,13 @@ class GeUsuario extends ActiveRecord{
     	$this->validates_uniqueness_of("email");
     	$this->validates_uniqueness_of("telefono");
     }
+    public function get_for_select(){
+    	$r = $this->find("columns: id,nombre,apellido");
+    	foreach ($r as $key => $value) {
+    		$arreglo[]=array("value"=>$value->id,"label"=>$value->nombre." ".$value->apellido);
+    	}
+    	return $arreglo;
+    }
 }
 
 

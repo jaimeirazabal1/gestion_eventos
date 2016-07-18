@@ -27,5 +27,9 @@ class IndexController extends AppController
             }
         }
     }
+    public function pruebas(){
+        View::template(null);
+
+    }
 
 }

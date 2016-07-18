@@ -9,11 +9,7 @@
     <li role="presentation"><a href="#comidas" aria-controls="comidas" role="tab" data-toggle="tab">Comidas</a></li>
     <li role="presentation"><a href="#contacto" aria-controls="contacto" role="tab" data-toggle="tab">Contacto</a></li>
   </ul>
-<style type="text/css">
-  table th{
-    width:350px;
-  }
-</style>
+
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="misdatos">
@@ -27,39 +23,39 @@
       <div class="mensajes_mis_tados"></div>
       <table class="table table-bordered table-striped">
         <thead>
-          <th><b>Nombre</b></th>
+          <th style="width:350px;"><b>Nombre</b></th>
           <td><?php echo $usuario->nombre." ".$usuario->apellido ?></td>
         </thead>
         <thead>
-          <th><b>DNI</b></th>
+          <th style="width:350px;"><b>DNI</b></th>
           <td><?php echo $usuario->dni ?></td>
         </thead>
         <thead>
-          <th><b>Tipo de Usuario</b></th>
+          <th style="width:350px;"><b>Tipo de Usuario</b></th>
           <td><?php echo $usuario->tipo_usuario ?></td>
         </thead>
         <thead>
-          <th><b>Compañia</b></th>
+          <th style="width:350px;"><b>Compañia</b></th>
           <td><?php echo $usuario->compania ?></td>
         </thead>
         <thead>
-          <th><b>Sección</b></th>
+          <th style="width:350px;"><b>Sección</b></th>
           <td><?php echo $usuario->seccion ?></td>
         </thead>
         <thead>
-          <th><b>Teléfono</b></th>
+          <th style="width:350px;"><b>Teléfono</b></th>
           <td class="input-group"><input type="text" value="<?php echo $usuario->telefono ?>" class="form-control"><span class="input-group-btn"><button class="btn btn-default" id="actualizar_telefono" usuario="<?php echo $usuario->id ?>" type="button">Actualizar</button></span></td>
         </thead>
         <thead>
-          <th><b>Email</b></th>
+          <th style="width:350px;"><b>Email</b></th>
           <td><?php echo $usuario->email ?></td>
         </thead>
         <thead>
-          <th><b>Dirección</b></th>
+          <th style="width:350px;"><b>Dirección</b></th>
           <td class="input-group"><input type="text" class='form-control' value="<?php echo $usuario->direccion ?>"><span class="input-group-btn"><button class="btn btn-default" id="actualizar_direccion" usuario="<?php echo $usuario->id ?>" type="button">Actualizar</button></span></td>
         </thead>
         <thead>
-          <th><b>Contraseña</b></th>
+          <th style="width:350px;"><b>Contraseña</b></th>
           <td>        <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
           Cambiar Contraseña
@@ -99,15 +95,95 @@
     </div>
     <div role="tabpanel" class="tab-pane" id="eventos">
       <h1 class="text-center">Eventos</h1>
-    
+        <?php if (isset($eventos) and !empty($eventos)): ?>
+          <table class="table datatables">
+            <thead>
+              <th>Creado Por:</th>
+              <th>Detalle</th>
+              <th>Fecha</th>
+        
+            </thead>
+            <?php foreach ($eventos as $key => $value): ?>
+              <tr>
+                <td><?php echo $value->usuario ?></td>
+                <td><?php echo Util::recortar_texto($value->detalle,50) ?>
+                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#<?php echo $value->id ?>">
+                  [Leer mas]
+                </button>
+
+                </td>
+                <?php $value->fecha_inicio = explode(" ",$value->fecha_inicio) ?>
+                <?php $value->fecha_final = explode(" ",$value->fecha_final) ?>
+                <td><?php echo "Desde: ".$value->fecha_inicio[0]." <br> Hasta: ".$value->fecha_final[0] ?></td>
+              
+              </tr>
+            <?php endforeach ?>
+          </table>
+        <?php else: ?>
+        <div class="text-center">
+          <h3>No hay eventos registrados</h3>
+        </div>
+        <?php endif ?>
     </div>
     <div role="tabpanel" class="tab-pane" id="comidas">
       <h1 class="text-center">Comidas</h1>
+   
 
+
+      <link href='<?php echo PUBLIC_PATH ?>javascript/fullcalendar-2.9.0/fullcalendar.css' rel='stylesheet' />
+      <link href='<?php echo PUBLIC_PATH ?>javascript/fullcalendar-2.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+      <script src='<?php echo PUBLIC_PATH ?>javascript/fullcalendar-2.9.0/lib/moment.min.js'></script>
+
+      <script src='<?php echo PUBLIC_PATH ?>javascript/fullcalendar-2.9.0/fullcalendar.min.js'></script>
+      <script src='<?php echo PUBLIC_PATH ?>javascript/fullcalendar-2.9.0/lang/es.js'></script>
+     
+      <div  style="width:50%;margin:auto">
+
+        <div id="calendar" usuario="<?php echo $usuario->id ?>"></div>
+      </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="contacto">
       <h1 class="text-center">Contacto</h1>
+      <div class="mensajes_contacto"></div>
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+              <form class="form-horizontal" id="form_contacto" method="post">
+                  <fieldset>
+                      <div class="form-group">
+                        <input type="hidden" value="<?php echo $usuario->id ?>" name="contacto[usuario_id]">
+                        <input id="fname" name="contacto[nombre]" value="<?php echo $usuario->nombre.' '.$usuario->apellido ?>" readonly type="text" placeholder="Nombre" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <input id="email" name="contacto[email]" value="<?php echo $usuario->email ?>" readonly  type="text" placeholder="Email Address" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <input id="titulo" name="contacto[titulo]" type="text" placeholder="Título" class="form-control">
+                      </div>   
+                      <div class="form-group">
+                        <textarea class="form-control" id="message" name="contacto[mensaje]" placeholder="Ingresa el mensaje aqui" rows="7"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <button type="submit" class="btn btn-primary " id="btn_enviar_mensaje">Enviar!</button>
+                      </div>
+                  </fieldset>
+              </form>
+              </div>
+          <div class="col-md-3"></div>
+        </div>
+          <style>
+            .header_ {
+                color: #36A0FF;
+                font-size: 27px;
+                padding: 10px;
+            }
 
+            .bigicon {
+                font-size: 35px;
+                color: #36A0FF;
+            }
+        </style>
+    </div>
     </div>
   </div>
 
@@ -164,8 +240,39 @@
     </div>
   </div>
 </div>
-<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jdataTables.bootstrap.min.css">
-<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jquery.dataTables.min.css">
+
+<!-- modales -->
+<?php echo Tag::js("comun") ?>
+<?php foreach ($eventos as $key => $value): ?>
+  <div class="modal fade" id="<?php echo $value->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Evento por <?php echo $value->usuario ?></h4>
+        </div>
+        <div class="modal-body">
+          <p>
+            <?php echo $value->detalle ?>
+          </p>
+           <div class="text-center">
+            <?php if (Load::model("ge_eventousuario")->buscar($value->id,$usuario->id )): ?>
+                <a href="<?php echo PUBLIC_PATH.'evento/borrarinscrito/'.$value->id.'/'.$usuario->id.'/panel#eventos' ?>" message="Estas seguro de Eliminarse de este evento?" title="Inscribir" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"> Borrarse</span></a>
+            <?php else: ?>
+
+                <a href="<?php echo PUBLIC_PATH.'evento/inscribir/'.$value->id.'/'.$usuario->id ?>" message="Estas seguro de Eliminar el evento?" title="Inscribir" class="btn btn-success "><span class="glyphicon glyphicon-ok"> Inscribirse</span></a>
+            <?php endif ?>
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php endforeach ?>
+<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/dataTables.bootstrap.min.css">
+<!--<link rel="stylesheet" href="<?php// echo PUBLIC_PATH ?>datatables/css/jquery.dataTables.min.css">-->
 <script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -246,5 +353,194 @@
           }
       }
     });
+
+
+    
+  
+    
+
+    $("body").on("click","#btn_enviar_mensaje",function(){
+      $.ajax({
+        url:"../contacto/enviar",
+        data:$("#form_contacto").serialize(),
+        type:"POST",
+        dataType:"json",
+        success:function(r){
+          console.log(r);
+          if (r.success) {
+            boton = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+            $(".mensajes_contacto").html("<div class='alert alert-success'>"+boton+"El mensaje fué enviado!</div>");
+            $("#titulo").val("");
+            $("#message").val("");
+          };
+        }
+      })
+      return false;
+    })
+  });
+    var tab = location.href.split("#")[1];
+    $('.nav-tabs a[href="#'+tab+'"]').tab('show');
+    $( 'a[data-toggle="tab"]' ).on( 'shown.bs.tab', function( evt ) {   
+      location.href = location.href.split("#")[0]+$( evt.target ).attr( 'href' )
+    });
+        
+    if (tab == "comidas") {
+      $("#calendar").fullCalendar({
+                lang:"es",
+        events: <?php echo $comidas ?>,
+          eventClick: function(calEvent, jsEvent, view) {
+            console.log(view)
+            //example: http://www.mikesmithdev.com/blog/fullcalendar-event-details-with-bootstrap-modal/
+            $("#calendarmodalForm_title").text(calEvent.title)
+            $("#calendarmodalForm_descripion").html("<p>"+calEvent.description+"</p>")
+            //alert('Event: ' + calEvent.title);
+            //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+            //alert('View: ' + view.name);
+            $(".cargando_comida").removeClass("hide")
+            var usuario = $("#calendar").attr("usuario");
+            $.ajax({
+              url:"../comidas/get_usuario_inscrito/"+calEvent.id+"/"+usuario,
+              dataType:"json",
+              async:false,
+              success:function(r){
+                $(".cargando_comida").addClass("hide")
+                if (r) {
+                  $("#calendarmodalForm_descripion").append("<p><button class='btn btn-danger borrarse_comida' usuario='"+usuario+"' comida='"+calEvent.id+"' >Borrarse</button></p>")
+                }else{
+                  $("#calendarmodalForm_descripion").append("<p><button class='btn btn-success incribirse_comida' usuario='"+usuario+"' comida='"+calEvent.id+"' >Inscribirse</button></p>")
+                }
+              }
+            })
+            //$(this).fullCalendar("rerenderEvents");
+            
+            //THIS DOES NOT WORK.  When click, right scroll bar disappears
+            //$('#calendarmodalForm').modal();
+        
+            //THIS DOES NOT WORK.  When click, right scroll bar disappears, but if click again scroll bar comes back.
+            $('#calendarmodalForm').modal("toggle");
+            
+            //THIS WORKS - SHOWS ALERT
+            //alert('Event id: ' + calEvent.id);
+          },
+      });
+    };
+    $("body").on("click",".borrarse_comida",function(){
+       $(".cargando_comida").removeClass("hide");
+     usuario=$(this).attr("usuario")
+        comida=$(this).attr("comida")
+       $.ajax({
+          url:"../comidas/inscripcion/borrarse/"+comida+"/"+usuario,
+          dataType:"json",
+
+          success:function(r){
+            if (r) {
+              $(".mensajes_comida").html("<div class='alert alert-success'>Registro realizado!</div>");
+              setTimeout(function() {
+              $('#calendarmodalForm').modal("hide");
+              $(".cargando_comida").addClass("hide");
+
+                location.reload(1)
+              }, 1500);
+            }else{
+              $(".cargando_comida").addClass("hide");
+
+              $(".mensajes_comida").html("<div class='alert alert-success'>Ocurrio un error!</div>");
+            }
+          }
+       });
+    });
+    $("body").on("click",".incribirse_comida",function(){
+       $(".cargando_comida").removeClass("hide");
+        usuario=$(this).attr("usuario")
+        comida=$(this).attr("comida")
+     
+       $.ajax({
+          url:"../comidas/inscripcion/inscribirse/"+comida+"/"+usuario,
+          dataType:"json",
+          success:function(r){
+            if (r) {
+              $(".mensajes_comida").html("<div class='alert alert-success'>Registro realizado!</div>");
+              setTimeout(function() {
+              $(".cargando_comida").addClass("hide");
+              $('#calendarmodalForm').modal("hide");
+                location.reload(1)
+              }, 1500);
+            }else{
+              $(".cargando_comida").addClass("hide");
+              $(".mensajes_comida").html("<div class='alert alert-success'>Ocurrio un error!</div>");
+            }
+          }
+       });
+    });
+   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr("href") // activated tab
+    if (target == "#comidas") {
+      var date = new Date();
+      var d = date.getDate();
+      var m = date.getMonth();
+      var y = date.getFullYear();
+      $("#calendar").fullCalendar({
+        lang:"es",
+        events: <?php echo $comidas ?>,
+          eventClick: function(calEvent, jsEvent, view) {
+            console.log(view)
+            //example: http://www.mikesmithdev.com/blog/fullcalendar-event-details-with-bootstrap-modal/
+            $("#calendarmodalForm_title").text(calEvent.title)
+            $("#calendarmodalForm_descripion").html("<p>"+calEvent.description+"</p>")
+            //alert('Event: ' + calEvent.title);
+            //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+            //alert('View: ' + view.name);
+            $(".cargando_comida").removeClass("hide")
+            var usuario = $("#calendar").attr("usuario");
+            $.ajax({
+              url:"../comidas/get_usuario_inscrito/"+calEvent.id+"/"+usuario,
+              dataType:"json",
+              async:false,
+              success:function(r){
+                $(".cargando_comida").addClass("hide")
+                if (r) {
+                  $("#calendarmodalForm_descripion").append("<p><button class='btn btn-danger borrarse_comida' usuario='"+usuario+"' comida='"+calEvent.id+"' >Borrarse</button></p>")
+                }else{
+                  $("#calendarmodalForm_descripion").append("<p><button class='btn btn-success incribirse_comida' usuario='"+usuario+"' comida='"+calEvent.id+"' >Inscribirse</button></p>")
+                }
+              }
+            })
+            //$(this).fullCalendar("rerenderEvents");
+            
+            //THIS DOES NOT WORK.  When click, right scroll bar disappears
+            //$('#calendarmodalForm').modal();
+        
+            //THIS DOES NOT WORK.  When click, right scroll bar disappears, but if click again scroll bar comes back.
+            $('#calendarmodalForm').modal("toggle");
+            
+            //THIS WORKS - SHOWS ALERT
+            //alert('Event id: ' + calEvent.id);
+          },
+      });
+    };
   });
 </script>
+<style type="text/css">
+  .fc-event-container:hover{
+    cursor: pointer;
+  }
+</style>
+<!-- Modal -->
+<div class="modal fade" id="calendarmodalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="calendarmodalForm_title">Modal title</h4>
+        <div class="mensajes_comida"></div>
+        <div class="cargando_comida text-center hide"><?php echo Html::img("spin.gif") ?> <br> Cargando Informacion...</div>
+      </div>
+      <div class="modal-body" id="calendarmodalForm_descripion">
+      
+      </div>
+      <div class="modal-footer">
+    
+      </div>
+    </div>
+  </div>
+</div>

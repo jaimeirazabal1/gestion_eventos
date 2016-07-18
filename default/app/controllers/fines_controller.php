@@ -4,6 +4,7 @@ class FinesController extends AppController{
 	public function registrar(){
 		View::select(NULL,'json');
 		$post = Input::post("fines");
+
 		if (Load::model('ge_fines')->esta_repetido($post['usuario_id'],$post['fecha_inicio'],$post['fecha_final'])) {
 			die(json_encode(array("message"=>"Ya se ha realizado un registro de la actividad del fin de semana!","success"=>false)));
 		}

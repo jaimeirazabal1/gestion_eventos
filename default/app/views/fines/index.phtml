@@ -1,17 +1,34 @@
 <?php echo Tag::css('comun') ?>
+<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.js"></script>
 <div class="container">
 <?php if (isset($usuarios)): ?>
 	<div class="text-center">
 		<h2>Fines de Semana</h2>
 	</div>
-	<?php View::content() ?>
+	
 	<p>Seleccione un usuario</p>
-	<ul class="list-group">
+	<div class="form-group">
+		<input class="form-control" id="searchinput" type="search" placeholder="Buscar Usuario..." />
+	</div>
+	<ul class="list-group" style="max-height:300px;overflow-y:scroll">
+		<li class="header"></li>
 	  <?php foreach ($usuarios as $key => $value): ?>
 	  	<li class="list-group-item"><?php echo Html::link('fines/index/'.$value->id,ucfirst($value->nombre)." ".ucfirst($value->apellido)) ?></li>
 	  <?php endforeach ?>
 	</ul>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("body").on("keyup","#searchinput",function(){
+			   var value = this.value;
+			    $('.list-group li').hide().each(function () {
+			        if ($(this).text().search(value) > -1) {
+			            $(this).prevAll('.header').first().add(this).show();
+			        }
+			    });
+			});
+		});
+	</script>
 <?php else: ?>
 
 	<?php if (!$fines): ?>
@@ -24,11 +41,12 @@
 		<div class='text-center'>	
 				<h2>Este Usuario no tiene registros</h2>
 		</div>
+		<?php View::content() ?>
 	<?php else: ?>	
 
 	<?php echo Tag::js("comun") ?>
-	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jquery.dataTables.min.css">
-	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/jdataTables.bootstrap.min.css">
+	
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/dataTables.bootstrap.min.css">
 	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
 	<script type="text/javascript">
@@ -59,6 +77,7 @@
 		          }
 		      }
 		    });
+			
 
 		});
 	</script>
@@ -119,11 +138,12 @@
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="myModalLabel">Agregar Registro de fin de semana</h4>
-		        <div id="mensajes_fines"></div>
+		        
 		      </div>
 		      <div class="modal-body">
-		        <?php echo Form::open() ?>
-		        	<?php echo Form::hidden('ge_fines.usuario_id',NULL,$usuario->id) ?>
+		      	<div id="mensajes_fines"></div>
+		        <?php echo Form::open("fines/registrar","post","id='form_fines'") ?>
+		        
 		        <div class="check">
 			        <label>
 			          <input type="checkbox" name="fines[se_queda]" id="se_queda" checked> Me quedo esta fin de semana
@@ -138,13 +158,16 @@
 		        	<div class="col-md-6">
 		        		<div class="form-group">
 		        			<label>Inicio de Semana (sabado)</label>
-		        			<?php echo Form::text("ge_fines.fecha_inicio","class='datepicker form-control'") ?>
+		        			<?php $inicio_recomendado = date("Y-m-d", strtotime('next Saturday')) ?>
+		        			<?php echo Form::text("fines.fecha_inicio","class='datepicker form-control'",$inicio_recomendado) ?>
 		        		</div>
 		        	</div>
 		        	<div class="col-md-6">
 		        		<div class="form-group">
 		        			<label>Final de Semana (domingo)</label>
-		        			<?php echo Form::text("ge_fines.fecha_final","class='datepicker form-control'") ?>
+		        			<?php $final_recomendado = date("Y-m-d", strtotime('next Sunday')) ?>
+
+		        			<?php echo Form::text("fines.fecha_final","class='datepicker form-control'",$final_recomendado) ?>
 		        		</div>		        		
 		        	</div>
 		        </div>
@@ -152,14 +175,34 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+		        <button type="button" class="btn btn-success" id="btn_submit_form_fines">Registrar</button>
 		      </div>
 		    </div>
 		  </div>
 		</div>
 
 		<script type="text/javascript">
-			$(document).ready(function(){
-						        $("body").on("click","#actualizar_direccion,#actualizar_telefono",function(){
+	$(document).ready(function(){
+		$.datepicker.regional['es'] = {
+		 closeText: 'Cerrar',
+		 prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+		 };
+ 		$.datepicker.setDefaults($.datepicker.regional['es']);
+		$(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+	$("body").on("click","#actualizar_direccion,#actualizar_telefono",function(){
       var accion = $(this).attr("id").split("_")[1];
       var id = $(this).attr("usuario");
       $(".cargando").removeClass("hide");
@@ -194,7 +237,12 @@
 
       }
     });
+    $("body").on("click","#btn_submit_form_fines",function(){
+    	$("#form_fines").submit();
+    	return false;
+    });
     $("body").on("submit","#form_fines",function(){
+    var usuario_id = $("#fines_usuario_id").val();
       $.ajax({
         url:$(this).attr("action"),
         data:$(this).serialize(),
@@ -202,7 +250,12 @@
         dataType:"json",
         success:function(r){
           if (r.success ==  true) {
+          	console.log(r.registros)
             $(".tabla_fines").html(r.registros);
+            setTimeout(function() {
+            	location.reload(1);
+            }, 1000);
+            
           }
           $("#mensajes_fines").html("<div class='alert alert-info'>"+r.message+"</div>");
         }

@@ -1,0 +1,54 @@
+<?php echo Tag::css("comun") ?>
+<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>jquery-ui/jquery-ui.min.css">
+<div class="container">
+	<div class="text-center">
+		<h2>Registro de Comidas</h2>
+	</div>
+	<?php View::content() ?>
+	<?php echo Form::open() ?>
+	<input type="hidden" name="comidas[usuario_id]" value="<?php echo Auth::get('id') ?>">
+	<div class="form-group">
+		<label>Tipo de comida</label>
+		<?php echo Form::select("comidas.tipo",array('DESAYUNO'=>'DESAYUNO','ALMUERZO'=>'ALMUERZO','CENA'=>'CENA'),"class='form-control datepicker'") ?>
+	</div>
+	<div class="form-group">
+		<label>Titulo</label>
+		<?php echo Form::text("comidas.titulo","class='form-control'") ?>
+	</div>
+	<div class="form-group">
+		<label>Dia</label>
+		<?php echo Form::text("comidas.fecha_comida","class='form-control datepicker'") ?>
+	</div>
+	<div class="form-group">
+		<label>Descripcion</label>
+		<?php echo Form::textarea("comidas.descripcion","class='form-control'") ?>
+	</div>
+	<?php echo Form::submit("Registrar","class='btn btn-success'") ?>
+	<?php echo Html::link('comidas/','Lista de Comidas') ?>
+	<?php echo Form::close() ?>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$.datepicker.regional['es'] = {
+		 closeText: 'Cerrar',
+		 prevText: '<Ant',
+		 nextText: 'Sig>',
+		 currentText: 'Hoy',
+		 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+		 dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+		 dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+		 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+		 weekHeader: 'Sm',
+		 dateFormat: 'dd/mm/yy',
+		 firstDay: 1,
+		 isRTL: false,
+		 showMonthAfterYear: false,
+		 yearSuffix: ''
+		 };
+ 		$.datepicker.setDefaults($.datepicker.regional['es']);
+		$(".datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+	});
+</script>

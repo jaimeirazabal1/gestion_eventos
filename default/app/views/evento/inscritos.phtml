@@ -1,0 +1,28 @@
+<?php echo Tag::js("comun") ?>
+<div class="container">
+	<div class="text-center">
+		<h2>Incritos por evento</h2>
+	</div>
+	<?php View::content() ?>
+	<?php echo Html::link("evento/","Atras") ?>
+	<table class="table datatables">
+		<thead>
+			<th>Usuario</th>
+			<th></th>
+		</thead>
+		<?php if ($eventos): ?>
+			<?php foreach ($eventos as $key => $value): ?>
+				<tr>
+					<td><?php echo $value->usuario ?></td>
+					<th><?php echo Html::link("evento/borrarinscrito/$value->evento_id/$value->usuario_id","Borrar","class='eliminar' message='Esta seguro de eliminar este usuario de este evento?'") ?></th>
+				</tr>
+			<?php endforeach ?>
+		<?php else: ?>
+			<tr>
+				<td colspan="2" class="text-center">
+					<h4>No hay usuarios inscritos en este evento</h4>
+				</td>
+			</tr>
+		<?php endif ?>
+	</table>
+</div>

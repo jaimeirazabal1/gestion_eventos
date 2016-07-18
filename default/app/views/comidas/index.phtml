@@ -1,0 +1,72 @@
+<?php echo Tag::css('comun') ?>
+<?php  echo Tag::js('comun') ?>
+<div class="container">
+	<div class="text-center">
+		<h2>Comidas</h2>
+	</div>
+	<?php View::content() ?>
+
+<p>
+	<?php echo Html::link('comidas/registrar',"<span class='glyphicon glyphicon-plus'></span>",'class="btn btn-success btn-xs"') ?>
+	
+</p>
+	<table class="table datatables">
+		<thead>
+			<th>Dia</th>
+			<th>Titulo</th>
+			<th>Tipo</th>
+			<th>Descripcion</th>
+			<th></th>
+		</thead>
+		<?php foreach ($comidas as $key => $value): ?>
+			<tr>
+				<td><?php echo $value->fecha_comida ?></td>
+				<td><?php echo $value->titulo ?></td>
+				<td><?php echo $value->tipo ?></td>
+				<td><?php echo $value->descripcion ?></td>
+				<td>
+						<div class="btn-group btn-group-xs" role="group" aria-label="">
+						  <a href="<?php echo PUBLIC_PATH.'comidas/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar esta comida?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
+						  
+						  <a href="<?php echo PUBLIC_PATH.'comidas/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
+						</div>					
+				</td>
+			</tr>
+		<?php endforeach ?>
+	</table>
+</div>
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".datatables").DataTable({
+		      language:{
+		          "sProcessing":     "Procesando...",
+		          "sLengthMenu":     "Mostrar _MENU_ registros",
+		          "sZeroRecords":    "No se encontraron resultados",
+		          "sEmptyTable":     "Ningún dato disponible en esta tabla",
+		          "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+		          "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+		          "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+		          "sInfoPostFix":    "",
+		          "sSearch":         "Buscar:",
+		          "sUrl":            "",
+		          "sInfoThousands":  ",",
+		          "sLoadingRecords": "Cargando...",
+		          "oPaginate": {
+		              "sFirst":    "Primero",
+		              "sLast":     "Último",
+		              "sNext":     "Siguiente",
+		              "sPrevious": "Anterior"
+		          },
+		          "oAria": {
+		              "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		              "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+		          }
+		      }
+		    });
+			
+
+		});
+	</script>

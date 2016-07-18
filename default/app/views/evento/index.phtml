@@ -1,0 +1,102 @@
+<?php echo Tag::css("comun") ?>
+<?php echo Tag::js("comun") ?>
+<div class="container">
+	<div class="text-center"><h2>Lista de Eventos</h2></div>
+	<?php View::content() ?>
+	<?php echo Html::link("evento/registrar","<span class='glyphicon glyphicon-plus'></span>","title='Nuevo Evento' class='btn btn-success btn-xs'") ?>
+	<?php if (isset($eventos) and !empty($eventos)): ?>
+		<table class="table datatables">
+			<thead>
+				<th>Creado Por:</th>
+				<th width="50%">Detalle</th>
+				<th>Fecha</th>
+				<th></th>
+			</thead>
+			<?php foreach ($eventos as $key => $value): ?>
+				<tr>
+					<td><?php echo $value->usuario ?></td>
+					<td><?php echo Util::recortar_texto($value->detalle,50) ?>
+					<button type="button" class="btn btn-link" data-toggle="modal" data-target="#<?php echo $value->id ?>">
+					  [Leer mas]
+					</button>
+
+					</td>
+					<?php $value->fecha_inicio = explode(" ",$value->fecha_inicio) ?>
+					<?php $value->fecha_final = explode(" ",$value->fecha_final) ?>
+					<td><?php echo "Desde: ".$value->fecha_inicio[0]." <br> Hasta: ".$value->fecha_final[0] ?></td>
+					<td>
+						<div class="btn-group btn-group-xs" role="group" aria-label="">
+							<?php if (Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
+								
+							  <a href="<?php echo PUBLIC_PATH.'evento/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar el evento?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
+							  
+							  <a href="<?php echo PUBLIC_PATH.'evento/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
+							  <a href="<?php echo PUBLIC_PATH.'evento/inscritos/'.$value->id ?>" title="Inscritos" class="btn btn-default"><span class="glyphicon glyphicon-th-list"></span></a>
+							<?php endif ?>
+						</div>
+					</td>
+				</tr>
+			<?php endforeach ?>
+		</table>
+	<?php else: ?>
+	<div class="text-center">
+		<h3>No hay eventos registrados</h3>
+	</div>
+	<?php endif ?>
+</div>
+<!-- modales -->
+<?php foreach ($eventos as $key => $value): ?>
+	<div class="modal fade" id="<?php echo $value->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Evento por <?php echo $value->usuario ?></h4>
+	      </div>
+	      <div class="modal-body">
+	       	<p>
+	       		<?php echo $value->detalle ?>
+	       	</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<?php endforeach ?>
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".datatables").DataTable({
+		      language:{
+		          "sProcessing":     "Procesando...",
+		          "sLengthMenu":     "Mostrar _MENU_ registros",
+		          "sZeroRecords":    "No se encontraron resultados",
+		          "sEmptyTable":     "Ningún dato disponible en esta tabla",
+		          "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+		          "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+		          "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+		          "sInfoPostFix":    "",
+		          "sSearch":         "Buscar:",
+		          "sUrl":            "",
+		          "sInfoThousands":  ",",
+		          "sLoadingRecords": "Cargando...",
+		          "oPaginate": {
+		              "sFirst":    "Primero",
+		              "sLast":     "Último",
+		              "sNext":     "Siguiente",
+		              "sPrevious": "Anterior"
+		          },
+		          "oAria": {
+		              "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		              "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+		          }
+		      }
+		    });
+			
+
+		});
+	</script>

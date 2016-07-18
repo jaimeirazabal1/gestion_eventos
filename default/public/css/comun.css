@@ -5,8 +5,9 @@
 	.container{
 		background: #f7f7f7;
 		padding: 30px;
+		padding-top: 70px; 
 	    left: 50%;
-	    top: 50%;
+	    top: 55%;
 	    position: absolute;
 
 	    -webkit-transform: translate3d(-50%, -50%, 0);

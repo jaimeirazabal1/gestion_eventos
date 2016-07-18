@@ -87,6 +87,8 @@ class UsuarioController extends AppController{
 		$this->usuario = Load::model("ge_usuario")->find(Auth::get("id"));
 		$fines = Load::model('ge_fines');
 		$this->fines = $fines->generar_tabla($fines->find("conditions: usuario_id = '".Auth::get('id')."' ","order: id desc"));
+		$this->eventos = Load::model("ge_evento")->get_eventos();
+		$this->comidas = Load::model("ge_comidas")->comidasToJson();
 	}
 	public function editar_valor($campo,$id,$valor){+
 		View::select(null,"json");
