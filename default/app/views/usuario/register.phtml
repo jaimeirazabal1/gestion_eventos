@@ -217,7 +217,7 @@
 	<br>
 	<input type="submit" name="register" class="login loginmodal-submit" value="REGISTRO">
 	  <div class="login-help">
-		<a href="<?php echo PUBLIC_PATH ?>index/login">Login</a> - <a href="#">Se te olvidó tu contraseña</a>
+		<a href="<?php echo PUBLIC_PATH ?>index/login">Login</a>
 		<?php if (Auth::is_valid() and Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
 			- <a href="<?php echo PUBLIC_PATH ?>usuario/">Lista de Usuarios</a>
 		<?php endif ?>

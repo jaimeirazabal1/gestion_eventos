@@ -6,7 +6,7 @@
 	<?php echo Html::link("usuario/register","<span class='glyphicon glyphicon-plus'></span>","title='Nuevo Usuario' class='btn btn-success btn-xs'") ?>
 	<br>
 	<br>
-	<table class="table">
+	<table class="table datatables">
 		<thead>
 			<th>Email</th>
 			<th>Nombre y Apellido</th>
@@ -23,14 +23,50 @@
 				<td><?php echo $value->telefono ?></td>
 				<td><p><?php echo $value->direccion ?></p></td>
 				<td>
+					<?php if (Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
 					<div class="btn-group btn-group-xs" role="group" aria-label="">
 					  <a href="<?php echo PUBLIC_PATH.'usuario/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar al usuario?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
 					  
 					  <a href="<?php echo PUBLIC_PATH.'usuario/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
 
 					</div>
+				<?php endif; ?>
 				</td>
 			</tr>
 		<?php endforeach ?>
 	</table>
 </div>
+	<link rel="stylesheet" href="<?php echo PUBLIC_PATH ?>datatables/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="<?php echo PUBLIC_PATH ?>datatables/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+    $(".datatables").DataTable({
+      "iDisplayLength": 5,
+      language:{
+          "sProcessing":     "Procesando...",
+          "sLengthMenu":     "Mostrar _MENU_ registros",
+          "sZeroRecords":    "No se encontraron resultados",
+          "sEmptyTable":     "Ningún dato disponible en esta tabla",
+          "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix":    "",
+          "sSearch":         "Buscar:",
+          "sUrl":            "",
+          "sInfoThousands":  ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+              "sFirst":    "Primero",
+              "sLast":     "Último",
+              "sNext":     "Siguiente",
+              "sPrevious": "Anterior"
+          },
+          "oAria": {
+              "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+              "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+      }
+    });
+	});
+</script>

@@ -25,11 +25,14 @@
 				<td><?php echo $value->tipo ?></td>
 				<td><?php echo $value->descripcion ?></td>
 				<td>
+					<?php if (Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
+						
 						<div class="btn-group btn-group-xs" role="group" aria-label="">
 						  <a href="<?php echo PUBLIC_PATH.'comidas/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar esta comida?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
 						  
 						  <a href="<?php echo PUBLIC_PATH.'comidas/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
 						</div>					
+					<?php endif ?>
 				</td>
 			</tr>
 		<?php endforeach ?>
@@ -41,6 +44,7 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 		    $(".datatables").DataTable({
+		    	"iDisplayLength": 5,
 		      language:{
 		          "sProcessing":     "Procesando...",
 		          "sLengthMenu":     "Mostrar _MENU_ registros",
