@@ -23,14 +23,14 @@
 				<td><?php echo $value->telefono ?></td>
 				<td><p><?php echo $value->direccion ?></p></td>
 				<td>
-					<?php if (Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
 					<div class="btn-group btn-group-xs" role="group" aria-label="">
+					<?php if (Auth::get("tipo_usuario") == "ADMINISTRADOR"): ?>
 					  <a href="<?php echo PUBLIC_PATH.'usuario/eliminar/'.$value->id ?>" message="Estas seguro de Eliminar al usuario?" title="Eliminar" class="btn btn-danger eliminar"><span class="glyphicon glyphicon-remove"></span></a>
 					  
-					  <a href="<?php echo PUBLIC_PATH.'usuario/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
 
-					</div>
 				<?php endif; ?>
+					  <a href="<?php echo PUBLIC_PATH.'usuario/editar/'.$value->id ?>" title="Editar" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
+					</div>
 				</td>
 			</tr>
 		<?php endforeach ?>

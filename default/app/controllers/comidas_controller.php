@@ -47,6 +47,54 @@ class ComidasController extends AppController{
 		View::select(null,"json");
 		$this->data = Load::model("ge_comidasusuario")->inscripcion($accion,$comida_id,$usuario_id);		
 	}
+	public function asistira(){
+		View::select(NULL,NULL);
+	    ob_start();
+
+	    Load::lib("html2pdf-4.5.1/vendor/autoload");	
+	    //require_once(dirname(__FILE__).'/../vendor/autoload.php');
+	    try
+	    {
+	        $html2pdf = new HTML2PDF('P', 'letter', 'es');
+	//      $html2pdf->setModeDebug();
+	        $html2pdf->setDefaultFont('Arial');
+	        $html2pdf->writeHTML("
+	        					<h2 style='text-align:center'>Asistencia comidas</h2>
+	        					<p>Hola</p>
+	        					");
+	        $html2pdf->Output('exemple00.pdf');
+	    }
+	    catch(HTML2PDF_exception $e) {
+	        echo $e;
+	        exit;
+	    }
+
+		die;
+	}
+	public function noasistira(){
+		View::select(NULL,NULL);
+	    ob_start();
+
+	    Load::lib("html2pdf-4.5.1/vendor/autoload");	
+	    //require_once(dirname(__FILE__).'/../vendor/autoload.php');
+	    try
+	    {
+	        $html2pdf = new HTML2PDF('P', 'letter', 'es');
+	//      $html2pdf->setModeDebug();
+	        $html2pdf->setDefaultFont('Arial');
+	        $html2pdf->writeHTML("
+	        					<h2 style='text-align:center'>Asistencia comidas</h2>
+	        					<p>Hola</p>
+	        					");
+	        $html2pdf->Output('exemple00.pdf');
+	    }
+	    catch(HTML2PDF_exception $e) {
+	        echo $e;
+	        exit;
+	    }
+
+		die;	
+	}
 }
 
 
