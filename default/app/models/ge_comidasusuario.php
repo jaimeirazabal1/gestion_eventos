@@ -25,6 +25,26 @@ class GeComidasusuario extends ActiveRecord{
 			return false;			
 		}
 	}
+	public function get_inscritos($comida_id){
+		$q = "SELECT * from ge_comidas 
+			inner join ge_comidasusuario 
+			inner join ge_usuario 
+			on ge_comidas.id = ge_comidasusuario.comidas_id and ge_comidasusuario.usuario_id = ge_usuario.id
+			where ge_comidas.id = '$comida_id'";
+
+
+		return $this->find_all_by_sql($q);
+	}
+	public function get_noinscritos($comida_id){
+		$q = "SELECT * from ge_comidas 
+			inner join ge_comidasusuario 
+			inner join ge_usuario 
+			on ge_comidas.id = ge_comidasusuario.comidas_id and ge_comidasusuario.usuario_id != ge_usuario.id
+			where ge_comidas.id = '$comida_id'";
+
+
+		return $this->find_all_by_sql($q);
+	}
 }
 
  ?>
